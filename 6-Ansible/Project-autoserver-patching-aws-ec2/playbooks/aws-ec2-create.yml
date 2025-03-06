@@ -1,0 +1,45 @@
+- name: Launch AWS EC2 Instance
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../vars/aws-vars.yml
+
+  tasks:
+    - name: Create EC2 instance
+      amazon.aws.ec2_instance:
+        name: "AnsibleManagedInstance"
+        key_name: "{{ key_name }}"
+        region: "{{ aws_region }}"
+        instance_type: "{{ instance_type }}"
+        security_groups: ["{{ security_group }}"]
+        subnet_id: "{{ subnet_id }}"
+        image_id: "{{ ami_id }}"
+        wait: yes
+        count: 1
+        network:
+          assign_public_ip: yes  # Ensures public IP is assigned
+        tags:
+          PatchGroup: "{{ patch_group }}"
+      register: ec2_info
+
+    - name: Debug EC2 instance details
+      debug:
+        var: ec2_info.instances
+
+    - name: Add new EC2 instance to inventory
+      add_host:
+        name: "{{ item.public_ip_address | default(item.private_ip_address, true) }}"
+        groups: patch_targets
+        ansible_user: "{{ ssh_user }}"
+        ansible_ssh_private_key_file: "{{ private_key_path }}"
+      loop: "{{ ec2_info.instances }}"
+
+    - name: Wait for SSH to become available
+      wait_for:
+        host: "{{ item.public_ip_address | default(item.private_ip_address, true) }}"
+        port: 22
+        delay: 30
+        timeout: 300
+        state: started
+      loop: "{{ ec2_info.instances }}"

@@ -1,0 +1,31 @@
+- name: Provision EC2 Instance
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    key_name: my-key
+    instance_type: t2.micro
+    image_id: ami-088b41ffb0933423f  # Change based on region
+    region: us-east-2
+    security_group: sg-03d14aed6c6f8a8be  # Ensure this is correct
+    subnet_id: subnet-085d110eddba4a1e2  # Ensure this is correct
+  tasks:
+    - name: Launch EC2 Instance
+      amazon.aws.ec2_instance:
+        name: "Ansible-EC2"
+        key_name: "{{ key_name }}"
+        instance_type: "{{ instance_type }}"
+        image_id: "{{ image_id }}"
+        region: "{{ region }}"
+        security_groups: ["{{ security_group }}"]  # Correct usage
+        vpc_subnet_id: "{{ subnet_id }}"  # Ensure subnet ID is provided
+        count: 1
+        wait: yes
+      register: ec2_info
+
+    - name: Add EC2 instance to inventory
+      add_host:
+        name: "ec2-instance"
+        ansible_host: "{{ ec2_info.instances[0].public_ip_address }}"
+        ansible_user: ubuntu
+        ansible_ssh_private_key_file: ~/.ssh/my-key.pem

@@ -1,0 +1,25 @@
+---
+- name: Destroy AWS EC2 instances and ELB
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Get information about EC2 instances
+      amazon.aws.ec2_instance_info:
+        region: us-east-2
+        filters:
+          "tag:Name": "WebServer"
+      register: ec2_info
+
+    - name: Terminate EC2 instances
+      amazon.aws.ec2_instance:
+        instance_ids: "{{ ec2_info.instances | map(attribute='instance_id') | list }}"
+        region: us-east-2
+        state: absent
+      when: ec2_info.instances | length > 0
+
+    - name: Delete ELB
+      amazon.aws.elb_classic_lb:
+        name: my-load-balancer
+        state: absent
+        region: us-east-2

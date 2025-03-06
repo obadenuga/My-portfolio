@@ -1,0 +1,23 @@
+- name: Terminate EC2 Instances
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../vars/aws-vars.yml
+
+  tasks:
+    - name: Find EC2 instances
+      amazon.aws.ec2_instance_info:
+        region: "{{ aws_region }}"
+        filters:
+          "tag:PatchGroup": "{{ patch_group }}"
+          instance-state-name: running
+      register: ec2_instances
+
+    - name: Terminate EC2 instances
+      amazon.aws.ec2_instance:
+        region: "{{ aws_region }}"
+        instance_ids: "{{ item.instance_id }}"
+        state: absent
+      loop: "{{ ec2_instances.instances }}"
+      when: ec2_instances.instances | length > 0

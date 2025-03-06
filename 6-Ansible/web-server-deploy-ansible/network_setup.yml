@@ -1,0 +1,44 @@
+---
+- name: Setup AWS Network (VPC, Subnet, Security Group)
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Create VPC
+      ec2_vpc_net:
+        name: MyVPC
+        cidr_block: 10.0.0.0/16
+        region: us-east-2
+        state: present
+      register: vpc
+
+    - name: Create Subnet
+      ec2_vpc_subnet:
+        vpc_id: "{{ vpc.vpc.id }}"
+        cidr: 10.0.1.0/24
+        region: us-east-2
+        state: present
+      register: subnet
+
+    - name: Create Security Group
+      ec2_security_group:
+        name: WebServerSG
+        description: Allow HTTP and SSH access
+        vpc_id: "{{ vpc.vpc.id }}"
+        region: us-east-2
+        rules:
+          - proto: tcp
+            ports:
+              - 22
+              - 80
+            cidr_ip: 0.0.0.0/0
+      register: security_group
+
+    - name: Save Network Details
+      copy:
+        content: |
+          vpc_id: {{ vpc.vpc.id }}
+          subnet_id: {{ subnet.subnet.id }}
+          security_group_id: {{ security_group.group_id }}
+        dest: network_details.yml
+

@@ -1,0 +1,22 @@
+- name: Terminate EC2 Instance
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    region: us-east-2
+    instance_name: "Ansible-EC2"
+
+  tasks:
+    - name: Find EC2 instance by Name
+      amazon.aws.ec2_instance_info:
+        region: "{{ region }}"
+        filters:
+          "tag:Name": "{{ instance_name }}"
+      register: ec2_instances
+
+    - name: Terminate EC2 instance
+      amazon.aws.ec2_instance:
+        instance_ids: "{{ ec2_instances.instances | map(attribute='instance_id') | list }}"
+        region: "{{ region }}"
+        state: absent
+      when: ec2_instances.instances | length > 0

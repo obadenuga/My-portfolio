@@ -1,0 +1,5 @@
+Host {{ ansible_host }}
+  User {{ ssh_user }}
+  IdentityFile {{ private_key_path }}
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null

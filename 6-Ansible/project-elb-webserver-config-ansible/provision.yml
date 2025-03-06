@@ -1,0 +1,49 @@
+---
+- name: Provision AWS EC2 instances and ELB
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Launch EC2 instances
+      amazon.aws.ec2_instance:
+        key_name: my-key
+        instance_type: t2.micro
+        image_id: ami-0fc82f4dabc05670b
+        region: us-east-2
+        count: 2
+        network:
+          vpc_id: "vpc-08492c5b960aa4717"
+          subnet_id: "subnet-0c762dce24a7e2c44"
+          security_group: "sg-06de952207be5ed68"
+          assign_public_ip: true
+        tags:
+          Name: WebServer
+      register: ec2_instances
+
+    - name: Create ELB
+      amazon.aws.elb_classic_lb:
+        name: my-load-balancer
+        state: present
+        region: us-east-2
+        listeners:
+          - protocol: http
+            load_balancer_port: 80
+            instance_port: 80
+        health_check:
+          ping_protocol: http
+          ping_port: 80
+          ping_path: "/"
+          interval: 30
+          timeout: 5
+          unhealthy_threshold: 2
+          healthy_threshold: 2
+        subnets:
+          - "subnet-0c762dce24a7e2c44"
+      register: elb
+
+    - name: Register instances with ELB
+      amazon.aws.elb_classic_lb:
+        name: my-load-balancer
+        instance_ids: "{{ ec2_instances.instances | map(attribute='instance_id') | list }}"
+        state: present
+        region: us-east-2
