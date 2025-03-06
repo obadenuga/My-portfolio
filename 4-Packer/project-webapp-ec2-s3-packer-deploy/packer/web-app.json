@@ -7,7 +7,7 @@
       {
         "type": "amazon-ebs",
         "region": "{{user `aws_region`}}",
-        "source_ami": "ami-0cb91c7de36eed2cb",  
+        "source_ami": "ami-12345",  ### ADD AMI-ID
         "instance_type": "t2.micro",
         "ssh_username": "ubuntu",
         "ami_name": "{{user `ami_name`}}",
