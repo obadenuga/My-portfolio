@@ -1,9 +1,9 @@
 aws_region: us-east-2
-ami_id: "ami-002acc74c401fa86b"  # Update with your desired AMI ID
+ami_id: "ami-12345"  # Update with your desired AMI ID
 instance_type: "t2.micro"
 key_name: "my-key"
-security_group: "sg-06de952207be5ed68"
-subnet_id: "subnet-0c762dce24a7e2c44"
+security_group: "sg-12345" # Update with your security group
+subnet_id: "subnet-12345" Update with your subnet ID
 patch_group: "weekly"
 ssh_user: "ec2-user"
-private_key_path: "/path/to/my-key.pem"
+private_key_path: "/path/to/mykey.pem" Update with your key.pem
