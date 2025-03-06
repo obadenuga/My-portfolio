@@ -12,7 +12,7 @@ variable "bucket_name" {
 variable "ami_id" {
   description = "AMI ID for EC2 instance"
   type        = string
-  default     = "ami-0fc82f4dabc05670b"
+  default     = "ami-12345"    #### Add your AMI ID
 }
 
 variable "instance_type" {
