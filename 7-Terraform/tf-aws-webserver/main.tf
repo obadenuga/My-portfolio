@@ -85,7 +85,7 @@ resource "aws_security_group" "web_sg" {
 # Define a key pair
 resource "aws_key_pair" "deployer" {
   key_name   = "deployer-key"
-  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAlnxTJP8601TR8rDF+SjKfJOX/BUKfsNYslhMLoxi5e obadenuga@gmail.com" # Replace with your SSH public key
+  public_key = "ssh-ed09876(Input your Keypair SSH ID) AAAAC3NzaC1lZDI1SIFUFHILFSNLSF274Ydf(REPLACE KEYPAIR INFO) youremail@gmail.com" # Replace with your SSH public key
 }
 
 # Define the EC2 instance
