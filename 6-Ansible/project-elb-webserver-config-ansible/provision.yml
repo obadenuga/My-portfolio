@@ -8,13 +8,13 @@
       amazon.aws.ec2_instance:
         key_name: my-key
         instance_type: t2.micro
-        image_id: ami-0fc82f4dabc05670b
+        image_id: ami-12345   ### Update with AMI ID
         region: us-east-2
         count: 2
         network:
-          vpc_id: "vpc-08492c5b960aa4717"
-          subnet_id: "subnet-0c762dce24a7e2c44"
-          security_group: "sg-06de952207be5ed68"
+          vpc_id: "vpc-ID"  ### Update with VPC ID
+          subnet_id: "subnet-12345"  ###Update with Subnet ID
+          security_group: "sg-123456"  ### Update with Security group
           assign_public_ip: true
         tags:
           Name: WebServer
@@ -38,7 +38,7 @@
           unhealthy_threshold: 2
           healthy_threshold: 2
         subnets:
-          - "subnet-0c762dce24a7e2c44"
+          - "subnet-12345" ### Update with Subnet ID
       register: elb
 
     - name: Register instances with ELB
