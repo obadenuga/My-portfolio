@@ -5,10 +5,10 @@
   vars:
     key_name: my-key
     instance_type: t2.micro
-    image_id: ami-088b41ffb0933423f  # Change based on region
+    image_id: ami-12345  ### Change AMI ID based on region
     region: us-east-2
-    security_group: sg-03d14aed6c6f8a8be  # Ensure this is correct
-    subnet_id: subnet-085d110eddba4a1e2  # Ensure this is correct
+    security_group: sg-12345  # Ensure security group ID is correct
+    subnet_id: subnet-12345  # Ensure subnet ID is correct
   tasks:
     - name: Launch EC2 Instance
       amazon.aws.ec2_instance:
@@ -28,4 +28,4 @@
         name: "ec2-instance"
         ansible_host: "{{ ec2_info.instances[0].public_ip_address }}"
         ansible_user: ubuntu
-        ansible_ssh_private_key_file: ~/.ssh/my-key.pem
+        ansible_ssh_private_key_file: ~/.ssh/keypair.pem  ### Update keypair.pem is accurate
