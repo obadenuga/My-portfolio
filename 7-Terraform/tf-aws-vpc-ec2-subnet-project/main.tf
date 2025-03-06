@@ -152,7 +152,7 @@ resource "aws_security_group" "private_sg" {
 
 # Launch EC2 Instances
 resource "aws_instance" "public_instance" {
-  ami             = "ami-018875e7376831abe" # Replace with your desired AMI
+  ami             = "ami-123456" # Replace with your desired AMI
   instance_type   = "t2.micro"
   subnet_id       = aws_subnet.public_subnet[0].id
   security_groups = [aws_security_group.public_sg.id]
@@ -163,7 +163,7 @@ resource "aws_instance" "public_instance" {
 }
 
 resource "aws_instance" "private_instance" {
-  ami             = "ami-018875e7376831abe" # Replace with your desired AMI
+  ami             = "ami-123456" # Replace with your desired AMI
   instance_type   = "t2.micro"
   subnet_id       = aws_subnet.private_subnet[0].id
   security_groups = [aws_security_group.private_sg.id]
@@ -176,7 +176,7 @@ resource "aws_instance" "private_instance" {
 # Generate SSH Key Pair
 resource "aws_key_pair" "ssh_key" {
   key_name   = "secure-key"
-  public_key = file("~/.ssh/id_ed25519.pub") # Replace with your public key path
+  public_key = file("~/.ssh/id_12345.pub") # Replace with your public key path
 }
 
 # Outputs
