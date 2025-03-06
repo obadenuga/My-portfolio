@@ -12,5 +12,6 @@
 ### Uncheck the setting "Block public access to buckets and objects granted through new public bucket policies".
 ###Save changes.
 ### Then, re-run: (Terraform init && terraform validate)
+### terraform plan
 ### terraform apply
 ### Run terraform destroy to remove all provisoned infrastructure
