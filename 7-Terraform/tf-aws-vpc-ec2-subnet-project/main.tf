@@ -175,7 +175,7 @@ resource "aws_instance" "private_instance" {
 
 # Generate SSH Key Pair
 resource "aws_key_pair" "ssh_key" {
-  key_name   = "secure-key"
+  key_name   = "your-key"   #### Use your keypair name
   public_key = file("~/.ssh/id_12345.pub") # Replace with your public key path
 }
 
